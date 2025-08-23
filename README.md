@@ -45,7 +45,7 @@ Notes:
 ## Usage
 
 1) Open any note in Joplin.
-2) Tools → Toggle AI Tag Suggester to open the side panel.
+2) Tools → Toggle AI Tag Suggester to open the side panel. Shortcut: Ctrl+Shift+Y (macOS: Cmd+Shift+Y).
 3) Click "Suggest Tags". The plugin will analyze the note and return 5 concise, lowercase, hyphenated tags.
 4) Click tags to select/deselect, then "Apply" to add them to the note.
 
