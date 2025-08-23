@@ -1,11 +1,11 @@
 {
   "name": "joplin-plugin-ai-tag-suggester",
-  "version": "1.0.1",
+  "version": "1.0.2",
   "scripts": {
     "build": "webpack --env joplin-plugin-config=buildMain && webpack --env joplin-plugin-config=buildExtra",
     "dist": "npm run build && node scripts/pack-jpl.js",
     "update": "npm install -g generator-joplin && yo joplin --update",
-    "prepublishOnly": "npm run dist && cp dist/manifest.json ./manifest.json"
+    "prepublishOnly": "npm run dist && node scripts/pack-jpl.js && cp dist/manifest.json ./manifest.json"
   },
   "license": "MIT",
   "keywords": [
@@ -13,6 +13,7 @@
   ],
   "files": [
     "dist",
+    "publish",
     "manifest.json",
     "README.md",
     "LICENSE"
