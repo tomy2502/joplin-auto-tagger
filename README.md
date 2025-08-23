@@ -61,6 +61,12 @@ Pack distributable:
 npm run dist
 ```
 
+## Support
+
+If you find this plugin useful and want to support development:
+
+<a href="https://buymeacoffee.com/cenktekin" target="_blank"><img src="https://img.buymeacoffee.com/button-api/?text=Buy me a coffee&emoji=☕&slug=cenktekin&button_colour=FFDD00&font_colour=000000&font_family=Inter&outline_colour=000000&coffee_colour=ffffff" alt="Buy Me a Coffee" /></a>
+
 ## License
 
 MIT
