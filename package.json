@@ -1,18 +1,30 @@
 {
   "name": "joplin-plugin-ai-tag-suggester",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "scripts": {
     "build": "webpack --env joplin-plugin-config=buildMain && webpack --env joplin-plugin-config=buildExtra",
     "dist": "npm run build && node scripts/pack-jpl.js",
-    "update": "npm install -g generator-joplin && yo joplin --update"
+    "update": "npm install -g generator-joplin && yo joplin --update",
+    "prepublishOnly": "npm run dist && cp dist/manifest.json ./manifest.json"
   },
   "license": "MIT",
   "keywords": [
     "joplin-plugin"
   ],
   "files": [
-    "dist"
+    "dist",
+    "manifest.json",
+    "README.md",
+    "LICENSE"
   ],
+  "homepage": "https://github.com/cenktekin/joplin-auto-tagger#readme",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/cenktekin/joplin-auto-tagger.git"
+  },
+  "bugs": {
+    "url": "https://github.com/cenktekin/joplin-auto-tagger/issues"
+  },
   "devDependencies": {
     "@joplin/tools": "^2.13.0",
     "@types/node": "^18.7.13",
