@@ -199,7 +199,9 @@ joplin.plugins.register({
                 const openrouterApiKey = await joplin.settings.value('openrouterApiKey');
                 const openrouterModel = (await joplin.settings.value('openrouterModel')) || 'openrouter/auto';
 
-                const prompt = `You are an expert at analyzing text and extracting key topics to be used as tags.\nAnalyze the following note content. Based on your analysis, generate exactly 5 relevant and concise tags.\nEach tag should be 1-3 words long and use lowercase letters, with hyphens instead of spaces (e.g., 'project-management').\nReturn your response as a JSON object with the shape { \"tags\": string[] } and nothing else.\n\nNote Content:\n---\n${message.noteContent}\n---`;
+                const prompt = `使用中文回答，你是一个擅长分析文本并提取关键主题以用作 tags 的专家。分析以下笔记内容。基于你的分析，生成恰好5个相关且简洁的 tags。每个 tag 应为一个汉字词语。将你的响应返回为一个 JSON对象，类似为 { \"tags\": string[] }，且不要有其他内容。\n\n笔记内容:\n---\n${message.noteContent}\n---`;
+
+                // const prompt = `You are an expert at analyzing text and extracting key topics to be used as tags.\nAnalyze the following note content. Based on your analysis, generate exactly 5 relevant and concise tags.\nEach tag should be 1-3 words long and use lowercase letters, with hyphens instead of spaces (e.g., 'project-management').\nReturn your response as a JSON object with the shape { \"tags\": string[] } and nothing else.\n\nNote Content:\n---\n${message.noteContent}\n---`;
 
                 // OpenRouter path (if selected or Gemini key missing but OpenRouter key present)
                 const useOpenRouter = provider === 'openrouter' || (!geminiApiKey && !!openrouterApiKey);
