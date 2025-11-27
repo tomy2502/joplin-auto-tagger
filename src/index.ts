@@ -203,7 +203,53 @@ joplin.plugins.register({
 
                 // const prompt = `You are an expert at analyzing text and extracting key topics to be used as tags.\nAnalyze the following note content. Based on your analysis, generate exactly 5 relevant and concise tags.\nEach tag should be 1-3 words long and use lowercase letters, with hyphens instead of spaces (e.g., 'project-management').\nReturn your response as a JSON object with the shape { \"tags\": string[] } and nothing else.\n\nNote Content:\n---\n${message.noteContent}\n---`;
 
+                // 新增 火山云-doubao 大模型，借助原“openrouter”通道，同时，屏蔽原openrouter通道代码
+                const useOpenRouter = provider === 'openrouter' || (!geminiApiKey && !!openrouterApiKey);
+                if (useOpenRouter) {
+                    if (!openrouterApiKey) return { error: 'OpenRouter API key missing' };
+                    try {
+                        console.info(`[AI Tag Suggester] OpenRouter provider selected. Model: ${openrouterModel}`);
+                        const resp = await gaxiosRequest<any>({
+                            url: 'https://ark.cn-beijing.volces.com/api/v3/chat/completions',
+                            method: 'POST',
+                            headers: {
+                                Authorization: `Bearer ${openrouterApiKey}`,
+                                'Content-Type': 'application/json',
+                                // Recommended by OpenRouter
+                                // 'X-Title': 'Joplin AI Tag Suggester',
+                            },
+                            data: {
+                                model: openrouterModel,
+                                messages: [
+                                    { role: 'system', content: 'You output JSON only.' },
+                                    { role: 'user', content: prompt },
+                                ],
+                                temperature: 0.2,
+                                max_tokens: 2000,
+                            },
+                            responseType: 'json',
+                            timeout: 60000,
+                        });
+                        const data = resp.data;
+                        const content = data?.choices?.[0]?.message?.content || '';
+                        if (typeof content === 'string' && content.trim()) {
+                            const jsonStart = content.indexOf('{');
+                            const jsonEnd = content.lastIndexOf('}');
+                            const jsonRaw = (jsonStart >= 0 && jsonEnd >= 0 && jsonEnd > jsonStart) ? content.slice(jsonStart, jsonEnd + 1) : content;
+                            const parsed = JSON.parse(jsonRaw);
+                            const tags = Array.isArray((parsed as any)?.tags) ? (parsed as any).tags : [];
+                            if (tags.length > 0) return { tags };
+                        }
+                        return { error: 'OpenRouter returned no tags. Try another model or revise note content.' };
+                    } catch (err: any) {
+                        const msg = (err && (err.message || String(err))) || 'Unknown error';
+                        console.error('[AI Tag Suggester] OpenRouter error:', msg);
+                        return { error: `OpenRouter error: ${msg}` };
+                    }
+                }
+
                 // OpenRouter path (if selected or Gemini key missing but OpenRouter key present)
+                /*
                 const useOpenRouter = provider === 'openrouter' || (!geminiApiKey && !!openrouterApiKey);
                 if (useOpenRouter) {
                     if (!openrouterApiKey) return { error: 'OpenRouter API key missing' };
@@ -247,6 +293,7 @@ joplin.plugins.register({
                         return { error: `OpenRouter error: ${msg}` };
                     }
                 }
+                */
 
                 // Default to Gemini path
                 if (!geminiApiKey) return { error: 'Gemini API key missing' };
